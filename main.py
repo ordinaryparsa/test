@@ -82,8 +82,11 @@ def log():
         return "OOps something went wrong"
 
 
-
-
+#logging out
+@app.route("/logout")
+def logout():
+    session["username"] = ""
+    return redirect("/")
 
 
 
