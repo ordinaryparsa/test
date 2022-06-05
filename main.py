@@ -154,6 +154,7 @@ def userdelete(userDelete):
     if session.get("username") == userDelete:   
         mycursor.execute("use users")
         mycursor.execute(f"DELETE FROM user WHERE username=\'{userDelete}\'")
+        mycursor.execute(f"DELETE FROM task WHERE owner=\'{userDelete}\'")
         db.commit()
         return redirect("/registration")
     else:
