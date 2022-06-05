@@ -147,6 +147,16 @@ def updatetask(owner, keyforedit):
         db.commit()
         return redirect("/")
 
+@app.route("/deleteaccount/<userDelete>")
+def userdelete(userDelete):
+    
+    if session.get("username") == userDelete:   
+        mycursor.execute("use users")
+        mycursor.execute(f"DELETE FROM user WHERE username=\'{userDelete}\'")
+        db.commit()
+        return redirect("/registration")
+    else:
+        return "sorry you're not authorized for this"
 
 if __name__ == "__main__":
     app.run(debug=True)
