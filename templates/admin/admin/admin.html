@@ -39,9 +39,9 @@
       </div>
       <div class='item'>
         <i class='material-icons'>
-          mail
+          settings
         </i>
-        <span class='text'>Mail</span>
+        <span class='text'> <a href="/logout"> logout</a></span>
         <i class='material-icons'>
           chevron_right
         </i>
@@ -64,9 +64,32 @@
             <div class='description'>Totsl accounts</div>
           </div>
         </div>
+        <div class='stat-item'>
+          <i class='material-icons yellow'>message</i>
+          <div class='counter'>
+            <div class='count'>{{messageNumber}}</div>
+            <div class='description'>Messages</div>
+          </div>
+        </div>
+        </div>
+        <br>
+        <div class='stat-item1'>
+          {% for i in range(messageNumber) %}
+          <ul>
+              <div class="row px-3 align-items-center todo-item rounded">
+                  <div class="col px-1 m-1 d-flex align-items-center">
+                     {{i+1}} "{{messageToAdmin[i][0]}}" say "{{messageToAdmin[i][1]}}"
+                  </div>
+              </div>
+          </ul>
+          {%endfor%}
+
+
+
         </div>
       </div>
     </div>
+
   </div>
 </div>
 <!-- partial -->

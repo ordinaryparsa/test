@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -195,7 +196,10 @@ def admin():
         totalAccount = len(mycursor.fetchall())
         mycursor.execute("SELECT * FROM task")
         totalTask = len(mycursor.fetchall())
-        return render_template("admin/admin/admin.html", totalAccount=totalAccount, totalTask=totalTask )
+        mycursor.execute("SELECT * FROM messages")
+        messageToAdmin = mycursor.fetchall()
+        messageNumber = len(messageToAdmin)
+        return render_template("admin/admin/admin.html", totalAccount=totalAccount, totalTask=totalTask, messageToAdmin=messageToAdmin, messageNumber=messageNumber)
 
 #admin delete account 
 @app.route("/admin/deleteaccount")
@@ -216,6 +220,19 @@ def admindel():
     else:
         return "sorry you're not authorized for this"
 
+#contact to admin:
+@app.route("/contactm")
+def contactm():
+    return render_template("contact/contact.html")
+
+@app.route("/contact", methods=["POST"])
+def contact():
+    message = request.form.get("message")
+    sender = session.get("username")
+    mycursor.execute("use users")
+    mycursor.execute(f"INSERT INTO messages (sender, message) VALUES (\'{sender}\', \'{message}\')")
+    db.commit()
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)
