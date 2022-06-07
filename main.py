@@ -191,13 +191,30 @@ def admin():
     isThisAdmin = mycursor.fetchall()
     if session.get("username") == "Admin" and isThisAdmin:
         mycursor.execute("use users")
-        mycursor.execute("SELECT username FROM user")
+        mycursor.execute("SELECT * FROM user")
         totalAccount = len(mycursor.fetchall())
-        mycursor.execute("SELECT task FROM task")
+        mycursor.execute("SELECT * FROM task")
         totalTask = len(mycursor.fetchall())
-        return render_template("admin/admin.html", totalAccount=totalAccount, totalTask=totalTask )
+        return render_template("admin/admin/admin.html", totalAccount=totalAccount, totalTask=totalTask )
 
-        
+#admin delete account 
+@app.route("/admin/deleteaccount")
+def admindelete():
+    if session.get("username") == "Admin":
+        return render_template("admin/deleteAccount/deleteacc.html")
+    else:
+        return "sorry you're not authorized for this"
+
+@app.route("/admin/delaccount", methods=["POST"])
+def admindel():
+    if session.get("username") == "Admin":
+        userToDel = request.form.get("delete")
+        mycursor.execute("use users")
+        mycursor.execute(f"DELETE FROM user WHERE username=\'{userToDel}\'")
+        db.commit()
+        return redirect("/admin")
+    else:
+        return "sorry you're not authorized for this"
 
 
 if __name__ == "__main__":
