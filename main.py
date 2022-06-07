@@ -22,14 +22,19 @@ mycursor = db.cursor()
 def home():
     if session.get("username") == "Admin":
         return redirect("/admin")
-
     elif session.get("username"):
         owner = session.get("username")
         mycursor.execute("use users")
-        mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
-        tasks = mycursor.fetchall()
-        tasknumber = len(tasks)
-        return render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber)
+        mycursor.execute(f"SELECT username FROM user WHERE username=\'{owner}\'")
+        userstillexist = mycursor.fetchall()
+        if userstillexist:    
+            mycursor.execute("use users")
+            mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
+            tasks = mycursor.fetchall()
+            tasknumber = len(tasks)
+            return render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber)
+        else:
+            return redirect("/login")
     else:
         return redirect("/login")
     
