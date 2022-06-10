@@ -1,5 +1,3 @@
-from crypt import methods
-from multiprocessing import reduction
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -7,6 +5,8 @@ import hashlib
 app = Flask(__name__)
 
 app.secret_key = "7h151553cr37k3y7h47n0b0dy5h0uldkn0w"
+#you can use os package to generate random string as secret key
+#os.urandom(15)
 
 #connecting to database:
 db = mysql.connector.connect(
@@ -101,11 +101,12 @@ def submitTask():
     owner = session.get("username")
     priority = request.form.get("priority")
     task = request.form.get("task")
-    if task == "":
+    category = request.form.get("category")
+    if task == "" or category == "":
         return redirect("/")
     else:
         mycursor.execute("use users")
-        mycursor.execute(f"INSERT INTO task (task, priority, isdone, owner) VALUES (\'{task}\',\'{priority}\',\'{isdone}\',\'{owner}\')")
+        mycursor.execute(f"INSERT INTO task (task, priority, isdone, owner, category) VALUES (\'{task}\',\'{priority}\',\'{isdone}\',\'{owner}\', \'{category}\')")
         db.commit()
         return redirect("/")
 
@@ -243,5 +244,8 @@ def contact():
     db.commit()
     return redirect("/")
 
+@app.route("/test")
+def test():
+    return 
 if __name__ == "__main__":
     app.run(debug=True)
